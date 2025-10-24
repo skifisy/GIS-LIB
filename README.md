@@ -34,3 +34,17 @@ GIS-based Distributed Library Management System (Minimal Prototype)
 - 加入学生登录与会话管理（JWT），管理员权限校验。
 - 为借还书操作添加业务校验（例如判断书籍是否可借、书籍库存实时更新）。
 - 支持空间查询（附近图书馆、范围内图书）及图层样式定制。
+
+Docker 一键运行（推荐）
+1. 本仓库已包含 `docker-compose.yml`、`backend/Dockerfile`、`frontend/Dockerfile`，可用 Docker Compose 一键构建并启动整个系统（包含 PostGIS）：
+
+   # 在仓库根目录运行（需要 Docker + Docker Compose）
+   docker-compose up --build
+
+2. 服务启动后：
+   - PostGIS: localhost:5432 (user=postgres password=postgres, db=gislib)
+   - 后端: http://localhost:8080
+   - 前端: http://localhost:5173 (静态资源由 nginx 提供，映射到容器 80 端口)
+
+注意：Compose 使用官方 `postgis/postgis:13-3.3` 镜像；如需不同版本请编辑 `docker-compose.yml` 中的 image 字段。
+
