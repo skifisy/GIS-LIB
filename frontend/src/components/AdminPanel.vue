@@ -10,7 +10,7 @@
           <div class="card-body">
             <button @click="loadLibraries">刷新</button>
             <ul class="mini-list">
-              <li v-for="l in libraries" :key="l.id">#{{ l.id }} {{ l.name }} — {{ l.college }} (藏书: {{ l.numberOfBooks ?? '-' }})</li>
+              <li v-for="l in libraries" :key="l.id">#{{ l.id }} {{ l.name }} — {{ l.college }} (藏书: {{ l.numberOfBooks ?? '-' }})<br/><small>坐标: {{ l.lon ?? '-' }}, {{ l.lat ?? '-' }}</small></li>
             </ul>
           </div>
         </div>
@@ -94,6 +94,10 @@ async function loadRents() {
 loadLibraries()
 loadBooks()
 loadRents()
+
+// expose loader so parent pages can request refresh
+import { defineExpose } from 'vue'
+defineExpose({ loadLibraries })
 </script>
 
 <style scoped>

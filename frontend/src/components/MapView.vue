@@ -3,12 +3,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, defineExpose } from 'vue'
 import L from 'leaflet'
-import { listLibraries, createLibrary } from '../api'
+import { listLibraries } from '../api'
 
 const props = defineProps({ admin: { type: Boolean, default: false } })
-const emit = defineEmits(['select-library'])
+const emit = defineEmits(['select-library', 'admin-point'])
 
 const mapContainer = ref(null)
 const mapRef = ref(null)
@@ -56,39 +56,11 @@ async function loadLibraries() {
 function enableAdminAdd() {
   const map = mapRef.value
   if (!map || clickHandler) return
-  clickHandler = async function (e) {
+  clickHandler = function (e) {
     const { lat, lng } = e.latlng
-    // build form element
-    const form = document.createElement('div')
-    const nameInput = document.createElement('input')
-    nameInput.placeholder = '名称'
-    const collegeInput = document.createElement('input')
-    collegeInput.placeholder = '学院'
-    const numInput = document.createElement('input')
-    numInput.type = 'number'
-    numInput.placeholder = '藏书数'
-    const saveBtn = document.createElement('button')
-    saveBtn.textContent = '保存'
-    form.appendChild(document.createElement('div')).appendChild(nameInput)
-    form.appendChild(document.createElement('div')).appendChild(collegeInput)
-    form.appendChild(document.createElement('div')).appendChild(numInput)
-    form.appendChild(document.createElement('div')).appendChild(saveBtn)
-
-    const popup = L.popup().setLatLng(e.latlng).setContent(form).openOn(map)
-
-    saveBtn.addEventListener('click', async () => {
-      const name = nameInput.value || '未命名'
-      const college = collegeInput.value || ''
-      const numberOfBooks = parseInt(numInput.value || '0')
-      try {
-        const created = await createLibrary({ name, college, numberOfBooks, lon: lng, lat })
-        addMarker(created)
-        map.closePopup(popup)
-      } catch (err) {
-        console.error('创建图书馆失败', err)
-        alert('创建失败，请查看控制台')
-      }
-    })
+    // emit admin-point so parent (AdminPage) will show a Vue form/modal
+    // parent can then call back to MapView to pan/add marker
+    emit('admin-point', { lat, lng })
   }
   map.on('click', clickHandler)
 }
@@ -128,6 +100,14 @@ watch(() => props.admin, (v) => {
   if (v) enableAdminAdd()
   else disableAdminAdd()
 })
+
+// expose methods to parent
+function panToPoint(lat, lng, zoom = 15) {
+  if (!mapRef.value) return
+  mapRef.value.setView([lat, lng], zoom)
+}
+
+defineExpose({ panToPoint, addMarker })
 </script>
 
 <style scoped>

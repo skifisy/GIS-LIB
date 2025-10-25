@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import 'leaflet/dist/leaflet.css'
+import 'element-plus/dist/index.css'
+import ElementPlus from 'element-plus'
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from './pages/HomePage.vue'
 import AdminPage from './pages/AdminPage.vue'
@@ -12,4 +14,4 @@ const routes = [
 
 const router = createRouter({ history: createWebHistory(), routes })
 
-createApp(App).use(router).mount('#app')
+createApp(App).use(router).use(ElementPlus).mount('#app')
