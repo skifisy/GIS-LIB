@@ -1,38 +1,77 @@
 <template>
   <div :class="['panel', { collapsed }]">
-    <button class="collapse-toggle" @click="collapsed = !collapsed" :aria-expanded="!collapsed">
+    <el-button class="collapse-toggle" @click="collapsed = !collapsed" :aria-expanded="!collapsed" type="primary" size="mini">
       {{ collapsed ? '展开' : '收起' }}
-    </button>
+    </el-button>
 
     <template v-if="!collapsed">
-      <h4>图书馆: {{ library.name }}</h4>
-      <div>学院: {{ library.college }}</div>
-      <div>藏书数: {{ library.numberOfBooks ?? '-' }}</div>
+      <el-card shadow="hover">
+        <template #header>
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px">
+            <div style="font-weight:600">图书馆: {{ library.name }}</div>
+            <div>
+              <el-button type="text" size="small" @click="close">关闭</el-button>
+            </div>
+          </div>
+        </template>
 
-      <hr />
-      <div>
-        <button @click="refresh">刷新藏书</button>
-        <button @click="close">关闭</button>
-      </div>
-
-      <!-- add book form -->
-      <div style="margin-top:8px; padding:8px; border:1px dashed #eee; background:#fafafa">
-        <h5 style="margin:0 0 6px 0">添加新图书</h5>
-        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
-          <input v-model="newBook.name" placeholder="书名" style="flex:1; min-width:160px" />
-          <input v-model="newBook.author" placeholder="作者" style="width:160px" />
-          <input v-model="newBook.publicationTime" type="date" style="width:160px" />
-          <button @click="addBook">添加图书</button>
+        <div style="margin-bottom:8px">
+          <div>学院: {{ library.college }}</div>
+          <div>藏书数: {{ library.numberOfBooks ?? '-' }}</div>
         </div>
-      </div>
 
-      <ul class="book-list">
-        <li v-for="b in books" :key="b.id">
-          <div><strong>{{ b.name }}</strong> — {{ b.author ?? '' }}</div>
-          <div>出版: {{ b.publicationTime ?? '-' }}</div>
-          <div><button @click="borrowBook(b.id)">借阅</button></div>
-        </li>
-      </ul>
+        <el-divider />
+
+        <div style="display:flex; gap:8px; margin-bottom:8px">
+          <el-button @click="refresh" size="small">刷新藏书</el-button>
+          <el-button @click="close" size="small">关闭</el-button>
+        </div>
+
+        <el-divider />
+
+        <!-- add book form using Element Plus -->
+        <div style="margin-top:8px">
+          <div style="margin:0 0 6px 0; font-weight:600">添加新图书</div>
+          <el-form :model="newBook" label-position="top" size="small">
+            <el-form-item label="书名">
+              <el-input v-model="newBook.name" placeholder="书名" />
+            </el-form-item>
+
+            <el-form-item label="作者">
+              <el-input v-model="newBook.author" placeholder="作者" />
+            </el-form-item>
+
+            <el-form-item label="出版日期">
+              <el-date-picker v-model="newBook.publicationTime" type="date" value-format="YYYY-MM-DD" placeholder="选择日期" style="width:100%" />
+            </el-form-item>
+
+            <el-form-item>
+              <el-button type="primary" @click="addBook">添加图书</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+
+        <el-divider />
+
+        <div>
+          <div v-if="books.length === 0" style="color:#999">暂无藏书</div>
+          <div v-else>
+            <el-card class="book-item" v-for="b in books" :key="b.id" shadow="never" style="margin-bottom:8px">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px">
+                <div>
+                  <div style="font-weight:600">{{ b.name }}</div>
+                  <div style="color:#666; font-size:12px">{{ b.author ?? '' }}</div>
+                  <div style="color:#666; font-size:12px">出版: {{ b.publicationTime ?? '-' }}</div>
+                </div>
+                <div>
+                  <el-button type="primary" size="mini" @click="borrowBook(b.id)">借阅</el-button>
+                </div>
+              </div>
+            </el-card>
+          </div>
+        </div>
+
+      </el-card>
     </template>
 
   </div>
@@ -102,7 +141,7 @@ async function addBook() {
 </script>
 
 <style scoped>
-.panel { position: fixed; right: 12px; top: 64px; width: 320px; max-height: calc(100vh - 100px); overflow:auto; background:white; border:1px solid #ddd; padding:10px; box-shadow:0 2px 8px rgba(0,0,0,0.15); z-index: 10000; }
+.panel { position: fixed; right: 12px; top: 64px; width: 320px; max-height: calc(100vh - 100px); overflow:auto; background:white; border:1px solid #ddd; padding:10px; box-shadow:0 2px 8px rgba(0,0,0,0.15); z-index: 900; }
 .panel.collapsed { width:56px; height:56px; padding:6px; display:flex; align-items:center; justify-content:center }
 .collapse-toggle { position:absolute; right:8px; top:8px; background:#f5f5f5; border:1px solid #ddd; padding:4px 6px; cursor:pointer }
 .book-list { list-style:none; padding:0 }
