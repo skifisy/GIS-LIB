@@ -36,4 +36,17 @@ import java.util.stream.Collectors;
       return ResponseEntity.notFound().build();
     }
   }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody RentRecord req) {
+    return rentRecordRepository.findById(id).map(existing -> {
+      existing.setBookId(req.getBookId());
+      existing.setLibraryId(req.getLibraryId());
+      existing.setStudentId(req.getStudentId());
+      existing.setRentTime(req.getRentTime());
+      existing.setReturnTime(req.getReturnTime());
+      RentRecord saved = rentRecordRepository.save(existing);
+      return ResponseEntity.ok(saved);
+    }).orElseGet(() -> ResponseEntity.notFound().build());
+  }
 }

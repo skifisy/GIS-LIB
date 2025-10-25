@@ -23,24 +23,50 @@
           {{ formatDate(row.publicationTime) }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="120">
+      <el-table-column label="操作" width="180">
         <template #default="{ row }">
+          <el-button type="primary" size="mini" @click="onEdit(row)">编辑</el-button>
           <el-button type="danger" size="mini" @click="onDelete(row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog title="编辑图书" :model-value="editVisible" width="520px" @close="() => (editVisible = false)">
+      <el-form :model="editForm" label-position="top" size="small">
+        <el-form-item label="书名">
+          <el-input v-model="editForm.name" />
+        </el-form-item>
+        <el-form-item label="作者">
+          <el-input v-model="editForm.author" />
+        </el-form-item>
+        <el-form-item label="所在馆">
+          <el-select v-model="editForm.libraryId" placeholder="选择馆">
+            <el-option v-for="l in libraries" :key="l.id" :label="l.name" :value="l.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="出版时间">
+          <el-date-picker v-model="editForm.publicationTime" type="date" value-format="YYYY-MM-DD" placeholder="选择日期" style="width:100%" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="() => (editVisible = false)">取消</el-button>
+        <el-button type="primary" @click="onSaveEdit">保存</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { listAllBooks, listBooks, listLibraries, deleteBook } from '../api'
+import { listAllBooks, listBooks, listLibraries, deleteBook, updateBook } from '../api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const books = ref([])
 const libraries = ref([])
 const loading = ref(false)
 const filterLibraryId = ref(null)
+const editVisible = ref(false)
+const editForm = ref({ id: null, name: '', author: '', libraryId: null, publicationTime: '' })
 function findLibraryName(id) {
   const l = libraries.value.find(x => x.id === id)
   return l ? l.name : (id || '-')
@@ -77,6 +103,26 @@ async function onDelete(id) {
   } catch (e) {
     console.error('删除书籍失败', e)
     ElMessage({ message: '删除失败', type: 'error' })
+  }
+}
+
+function onEdit(row) {
+  editForm.value = { id: row.id, name: row.name, author: row.author, libraryId: row.libraryId, publicationTime: (typeof row.publicationTime === 'string' ? row.publicationTime.split('T')[0] : '') }
+  editVisible.value = true
+}
+
+async function onSaveEdit() {
+  if (!editForm.value.name) return ElMessage({ message: '请输入书名', type: 'warning' })
+  try {
+    const payload = { name: editForm.value.name, author: editForm.value.author || null, libraryId: editForm.value.libraryId }
+    if (editForm.value.publicationTime) payload.publicationTime = editForm.value.publicationTime + 'T00:00:00'
+    const updated = await updateBook(editForm.value.id, payload)
+    books.value = books.value.map(x => x.id === updated.id ? updated : x)
+    ElMessage({ message: '更新成功', type: 'success' })
+    editVisible.value = false
+  } catch (e) {
+    console.error('更新失败', e)
+    ElMessage({ message: '更新失败', type: 'error' })
   }
 }
 

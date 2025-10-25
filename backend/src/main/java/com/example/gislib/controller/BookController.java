@@ -32,6 +32,19 @@ import java.util.stream.Collectors;
     return ResponseEntity.ok(saved);
   }
 
+  @PutMapping("/{id}")
+  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Book b) {
+    return bookRepository.findById(id).map(existing -> {
+      existing.setName(b.getName());
+      existing.setAuthor(b.getAuthor());
+      existing.setLibraryId(b.getLibraryId());
+      existing.setPressId(b.getPressId());
+      existing.setPublicationTime(b.getPublicationTime());
+      Book saved = bookRepository.save(existing);
+      return ResponseEntity.ok(saved);
+    }).orElseGet(() -> ResponseEntity.notFound().build());
+  }
+
   @DeleteMapping("/{id}")
   public ResponseEntity<?> delete(@PathVariable Long id) {
     try {

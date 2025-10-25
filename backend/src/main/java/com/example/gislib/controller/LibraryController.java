@@ -76,6 +76,26 @@ import java.util.stream.Collectors;
       }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody CreateLibraryReq req) {
+      return libraryRepository.findById(id).map(lib -> {
+        lib.setName(req.getName());
+        lib.setCollege(req.getCollege());
+        lib.setNumberOfBooks(req.getNumberOfBooks());
+        Point p = geometryFactory.createPoint(new Coordinate(req.getLon(), req.getLat()));
+        p.setSRID(4523);
+        lib.setLocation(p);
+        Library saved = libraryRepository.save(lib);
+        LibraryDto d = new LibraryDto();
+        d.setId(saved.getId());
+        d.setName(saved.getName());
+        d.setCollege(saved.getCollege());
+        d.setNumberOfBooks(saved.getNumberOfBooks());
+        if (saved.getLocation() != null) { d.setLon(saved.getLocation().getX()); d.setLat(saved.getLocation().getY()); }
+        return ResponseEntity.ok(d);
+      }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
  public
   static class CreateLibraryReq {
    private
