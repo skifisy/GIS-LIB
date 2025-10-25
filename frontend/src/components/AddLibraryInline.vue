@@ -21,7 +21,7 @@
       </div>
 
       <el-input v-model="form.name" placeholder="图书馆名称" style="margin-bottom:8px" />
-      <el-input v-model="form.college" placeholder="学院" style="margin-bottom:8px" />
+  <el-input v-model="form.college" placeholder="大学" style="margin-bottom:8px" />
       <el-input-number v-model="form.numberOfBooks" :min="0" label="藏书数" style="margin-bottom:8px" />
 
       <div style="display:flex; gap:12px; align-items:center;">

@@ -16,14 +16,14 @@
           <div style="font-size:12px; color:#666; margin-bottom:6px">筛选类型</div>
           <el-radio-group v-model="filterType">
             <el-radio-button label="all">全部</el-radio-button>
-            <el-radio-button label="college">按学院</el-radio-button>
+            <el-radio-button label="college">按大学</el-radio-button>
             <el-radio-button label="name">按名称</el-radio-button>
           </el-radio-group>
         </div>
 
         <div v-if="filterType === 'college'">
-          <div style="font-size:12px; color:#666; margin-bottom:6px">选择学院</div>
-          <el-select v-model="selectedCollege" placeholder="请选择学院" style="min-width:220px" clearable>
+          <div style="font-size:12px; color:#666; margin-bottom:6px">选择大学</div>
+          <el-select v-model="selectedCollege" placeholder="请选择大学" style="min-width:220px" clearable>
             <el-option v-for="c in colleges" :key="c" :label="c" :value="c" />
           </el-select>
         </div>
@@ -40,7 +40,7 @@
       <div style="margin-top:12px; height:calc(100% - 110px); overflow:auto">
         <el-table :data="filteredLibraries" stripe size="small" style="width:100%" @row-click="onRowClick">
           <el-table-column prop="name" label="名称" />
-          <el-table-column prop="college" label="学院" />
+          <el-table-column prop="college" label="大学" />
           <el-table-column prop="numberOfBooks" label="藏书" width="90" />
         </el-table>
       </div>

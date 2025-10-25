@@ -3,7 +3,7 @@ import App from './App.vue'
 import 'leaflet/dist/leaflet.css'
 import 'element-plus/dist/index.css'
 import ElementPlus from 'element-plus'
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import HomePage from './pages/HomePage.vue'
 import AdminPage from './pages/AdminPage.vue'
 
@@ -12,6 +12,7 @@ const routes = [
   { path: '/admin', component: AdminPage }
 ]
 
-const router = createRouter({ history: createWebHistory(), routes })
+// Use hash history so refreshing nested routes works on static hosts without server rewrite rules.
+const router = createRouter({ history: createWebHashHistory(), routes })
 
 createApp(App).use(router).use(ElementPlus).mount('#app')

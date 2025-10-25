@@ -1,8 +1,6 @@
 <template>
   <div :class="['panel', { collapsed }]">
-    <el-button class="collapse-toggle" @click="collapsed = !collapsed" :aria-expanded="!collapsed" type="primary" size="mini">
-      {{ collapsed ? '展开' : '收起' }}
-    </el-button>
+    
 
     <template v-if="!collapsed">
       <el-card shadow="hover">
@@ -16,7 +14,7 @@
         </template>
 
         <div style="margin-bottom:8px">
-          <div>学院: {{ library.college }}</div>
+          <div>大学: {{ library.college }}</div>
           <div>藏书数: {{ library.numberOfBooks ?? '-' }}</div>
         </div>
 

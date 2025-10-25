@@ -79,7 +79,7 @@ def main():
     # 1) 创建 library
     lib_payload = {
         'name': 'TEST_LIB_py',
-        'college': '测试学院',
+        'college': '测试大学',
         'numberOfBooks': 123,
         'lon': 104.07,
         'lat': 30.67

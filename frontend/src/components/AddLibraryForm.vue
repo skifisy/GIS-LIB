@@ -20,7 +20,7 @@
       </div>
 
       <el-input v-model="form.name" placeholder="图书馆名称" />
-      <el-input v-model="form.college" placeholder="学院" />
+  <el-input v-model="form.college" placeholder="大学" />
       <el-input-number v-model="form.numberOfBooks" :min="0" label="藏书数" />
 
       <div>经度: <strong>{{ displayLon }}</strong> 纬度: <strong>{{ displayLat }}</strong></div>

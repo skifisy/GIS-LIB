@@ -11,7 +11,7 @@
           <el-menu-item index="libraries">馆藏列表</el-menu-item>
           <el-menu-item index="books">图书列表</el-menu-item>
           <el-menu-item index="rents">借阅记录</el-menu-item>
-          <el-menu-item index="add">手动添加馆点</el-menu-item>
+          <el-menu-item index="add">添加馆点</el-menu-item>
         </el-menu>
       </el-aside>
 

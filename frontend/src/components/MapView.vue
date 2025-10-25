@@ -20,7 +20,7 @@ function createMarkerElement(lib) {
   container.innerHTML = `
     <div>
       <strong>${lib.name}</strong><br/>
-      学院: ${lib.college}<br/>
+  大学: ${lib.college}<br/>
       藏书: ${lib.numberOfBooks ?? '-'}<br/>
       <button class="view-books-btn">查看藏书</button>
     </div>`
