@@ -12,6 +12,9 @@
 
     <BookPanel v-if="selectedLibrary" :library="selectedLibrary" :studentId="studentId" @close="selectedLibrary=null" @borrowed="onBorrowed" />
     <RentsPanel v-if="showRents" @close="showRents=false" />
+
+    <!-- admin panel overlay -->
+    <AdminPanel v-if="adminMode" @close="toggleAdmin" />
   </div>
 </template>
 
@@ -20,11 +23,12 @@ import { ref } from 'vue'
 import MapView from './components/MapView.vue'
 import BookPanel from './components/BookPanel.vue'
 import RentsPanel from './components/RentsPanel.vue'
+import AdminPanel from './components/AdminPanel.vue'
 
 export default {
-  components: { MapView, BookPanel, RentsPanel },
+  components: { MapView, BookPanel, RentsPanel, AdminPanel },
   setup() {
-    const adminMode = ref(false)
+  const adminMode = ref(false)
     const studentId = ref('')
     const selectedLibrary = ref(null)
     const showRents = ref(false)
@@ -35,3 +39,4 @@ export default {
   }
 }
 </script>
+

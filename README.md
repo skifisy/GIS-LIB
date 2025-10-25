@@ -48,3 +48,58 @@ Docker 一键运行（推荐）
 
 注意：Compose 使用官方 `postgis/postgis:13-3.3` 镜像；如需不同版本请编辑 `docker-compose.yml` 中的 image 字段。
 
+测试与实用工具
+----------------
+
+本仓库包含几个用于自动化测试与诊断的小脚本与容器：
+
+- 集成测试容器 (`tester`)：
+   - 在 `docker-compose.yml` 中已添加 `tester` 服务（基于 `scripts/Dockerfile`），用于在 Compose 网络内部运行后端集成测试。
+   - 启动并运行测试：
+      ```bash
+      docker-compose up --build tester
+      ```
+      或先构建再运行：
+      ```bash
+      docker-compose build tester
+      docker-compose run --rm tester
+      ```
+   - `tester` 会执行 `scripts/test_backend.py`：该脚本等待后端与 Postgres 可用，依次执行创建 library/book、插入 student、borrow/return 操作，并直接连接数据库验证表中数据变更。
+   - 默认环境变量（可在 `docker-compose.yml` 中或 CLI 中覆盖）：
+      - BACKEND_URL=http://backend:8080/api
+      - PG_HOST=db
+      - PG_PORT=5432
+      - PG_USER=postgres
+      - PG_PASS=postgres
+      - PG_DB=gislib
+
+- 本地运行测试脚本：
+   - 你也可以在宿主机上直接运行测试脚本（需要 Python 与依赖）：
+      ```bash
+      pip install -r scripts/requirements.txt
+      python3 scripts/test_backend.py
+      ```
+   - 可通过环境变量覆盖默认地址/凭据，例如：
+      ```bash
+      BACKEND_URL=http://localhost:8080/api PG_HOST=127.0.0.1 PG_PORT=5432 python3 scripts/test_backend.py
+      ```
+
+- 解析 Compose 文件工具：
+   - `scripts/parse_compose.py` 会读取仓库根目录下的 `docker-compose.yml`，并输出 `db`、`backend`、`frontend` 服务的宿主机端口(Host port)与容器端口(Container port)，以便快速确认如何从宿主机访问各服务。
+   - 用法：
+      ```bash
+      pip install pyyaml
+      python3 scripts/parse_compose.py docker-compose.yml
+      ```
+
+数据与清理
+-----------
+- 集成测试脚本会在数据库中插入测试记录（library、book、student、rent）。目前脚本不会自动删除这些测试数据；若你希望每次运行后自动清理，请告诉我，我可以把脚本改为在结束时删除测试记录或使用事务/临时库。 
+
+注意事项与建议
+----------------
+- SRID: 本项目默认使用 SRID=4523（见 `db/schema.sql` 与 `Library` 实体），请确保你的 PostGIS 环境支持该 SRID，或根据需要调整为 4326（WGS84）。
+- 配置：为了在不同环境（本地开发、容器、部署）间切换，建议将后端 API 地址与 SRID 等参数通过环境变量暴露并在前端/后端中读取。
+
+如需我把集成测试改为在结束后自动清理测试数据，或把测试迁移为 Spring Boot 原生集成测试（`mvn test`），回复告诉我你偏好的方案，我会继续实现。
+

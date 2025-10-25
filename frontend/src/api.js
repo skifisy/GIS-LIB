@@ -23,6 +23,12 @@ export async function listBooks(libraryId) {
   return res.data
 }
 
+// safe helper: fetch all books without sending undefined params
+export async function listAllBooks() {
+  const res = await api.get('/books')
+  return res.data
+}
+
 export async function createBook(book) {
   const res = await api.post('/books', book)
   return res.data
@@ -30,6 +36,12 @@ export async function createBook(book) {
 
 export async function listRents(studentId) {
   const res = await api.get('/rents', { params: { studentId } })
+  return res.data
+}
+
+// safe helper: fetch all rents without sending undefined params
+export async function listAllRents() {
+  const res = await api.get('/rents')
   return res.data
 }
 
