@@ -36,6 +36,7 @@
 import { ref, computed, watch } from 'vue'
 import regions from '../data/regions'
 import { createLibrary } from '../api'
+import { formatCoord } from '../utils/format'
 
 const props = defineProps({ visible: { type: Boolean, default: false }, initialPoint: { type: Object, default: null } })
 const emit = defineEmits(['close', 'created', 'region-change'])
@@ -52,8 +53,14 @@ const cities = computed(() => provinceIndex.value != null ? regionsData[province
 const districts = computed(() => (cities.value && cityIndex.value != null) ? cities.value[cityIndex.value].districts : [])
 const streets = computed(() => (districts.value && districtIndex.value != null) ? districts.value[districtIndex.value].streets : [])
 
-const displayLon = computed(() => form.value.lon ?? (props.initialPoint && props.initialPoint.lng) ?? '-')
-const displayLat = computed(() => form.value.lat ?? (props.initialPoint && props.initialPoint.lat) ?? '-')
+const displayLon = computed(() => {
+  const raw = form.value.lon ?? (props.initialPoint && (props.initialPoint.lng || props.initialPoint.lon))
+  return formatCoord(raw)
+})
+const displayLat = computed(() => {
+  const raw = form.value.lat ?? (props.initialPoint && (props.initialPoint.lat || props.initialPoint.lat))
+  return formatCoord(raw)
+})
 
 watch(() => props.initialPoint, (p) => {
   if (p) {

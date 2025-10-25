@@ -12,7 +12,7 @@
       <el-table-column prop="college" label="学院" />
       <el-table-column prop="numberOfBooks" label="藏书数" width="120" />
       <el-table-column label="坐标" >
-        <template #default="{ row }">{{ row.lon ?? '-' }}, {{ row.lat ?? '-' }}</template>
+        <template #default="{ row }">{{ formatCoord(row.lon) }}, {{ formatCoord(row.lat) }}</template>
       </el-table-column>
       <el-table-column label="操作" width="120">
         <template #default="{ row }">
@@ -27,6 +27,7 @@
 import { ref } from 'vue'
 import { listLibraries, deleteLibrary } from '../api'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { formatCoord } from '../utils/format'
 
 const libs = ref([])
 const loading = ref(false)
