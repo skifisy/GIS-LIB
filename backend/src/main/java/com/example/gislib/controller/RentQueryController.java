@@ -5,6 +5,7 @@ import com.example.gislib.repository.RentRecordRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController @RequestMapping("/api/rents")
     @CrossOrigin(origins = "*") public class RentQueryController {
@@ -22,6 +23,6 @@ import java.util.List;
     return rentRecordRepository.findAll()
         .stream()
         .filter(r->studentId.equals(r.getStudentId()))
-        .toList();
+        .collect(Collectors.toList());
   }
 }

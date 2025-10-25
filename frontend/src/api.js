@@ -1,6 +1,12 @@
 import axios from 'axios'
 
-const api = axios.create({ baseURL: 'http://localhost:8080/api' })
+// allow configuring the API base URL via Vite env var VITE_API_BASE
+// e.g. VITE_API_BASE=http://localhost:8080/api
+const baseURL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE)
+  ? import.meta.env.VITE_API_BASE
+  : 'http://localhost:8080/api'
+
+const api = axios.create({ baseURL })
 
 export async function listLibraries() {
   const res = await api.get('/libraries')

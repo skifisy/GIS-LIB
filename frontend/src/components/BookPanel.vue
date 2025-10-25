@@ -14,7 +14,7 @@
       <li v-for="b in books" :key="b.id">
         <div><strong>{{ b.name }}</strong> — {{ b.author ?? '' }}</div>
         <div>出版: {{ b.publicationTime ?? '-' }}</div>
-        <div><button @click="borrow(b.id)">借阅</button></div>
+      <div><button @click="doBorrow(b.id)">借阅</button></div>
       </li>
     </ul>
   </div>
@@ -35,7 +35,7 @@ watch(() => props.library, () => { refresh() }, { immediate: true })
 
 function close() { emit('close') }
 
-async function borrow(bookId) {
+async function doBorrow(bookId) {
   const sid = props.studentId || prompt('请输入学生 ID（模拟登录）')
   if (!sid) return alert('需要学生 ID')
   try {

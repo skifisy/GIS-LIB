@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController @RequestMapping("/api/books")
     @CrossOrigin(origins = "*") public class BookController {
@@ -23,7 +24,7 @@ import java.util.List;
     return bookRepository.findAll()
         .stream()
         .filter(b->libraryId.equals(b.getLibraryId()))
-        .toList();
+        .collect(Collectors.toList());
   }
 
   @PostMapping public ResponseEntity < ? > create(@RequestBody Book b) {
