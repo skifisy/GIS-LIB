@@ -31,4 +31,14 @@ import java.util.stream.Collectors;
     Book saved = bookRepository.save(b);
     return ResponseEntity.ok(saved);
   }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> delete(@PathVariable Long id) {
+    try {
+      bookRepository.deleteById(id);
+      return ResponseEntity.noContent().build();
+    } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+      return ResponseEntity.notFound().build();
+    }
+  }
 }

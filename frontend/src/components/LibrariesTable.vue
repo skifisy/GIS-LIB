@@ -14,13 +14,19 @@
       <el-table-column label="坐标" >
         <template #default="{ row }">{{ row.lon ?? '-' }}, {{ row.lat ?? '-' }}</template>
       </el-table-column>
+      <el-table-column label="操作" width="120">
+        <template #default="{ row }">
+          <el-button type="danger" size="mini" @click="onDelete(row.id)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { listLibraries } from '../api'
+import { listLibraries, deleteLibrary } from '../api'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const libs = ref([])
 const loading = ref(false)
@@ -31,6 +37,19 @@ async function load() {
     libs.value = await listLibraries()
   } catch (e) { console.error(e); libs.value = [] }
   loading.value = false
+}
+
+async function onDelete(id) {
+  const ok = await ElMessageBox.confirm('确认删除该图书馆吗？此操作不可恢复。', '删除确认', { type: 'warning' }).catch(() => false)
+  if (!ok) return
+  try {
+    await deleteLibrary(id)
+    libs.value = libs.value.filter(x => x.id !== id)
+    ElMessage({ message: '删除成功', type: 'success' })
+  } catch (e) {
+    console.error('删除失败', e)
+    ElMessage({ message: '删除失败', type: 'error' })
+  }
 }
 
 load()

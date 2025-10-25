@@ -61,7 +61,7 @@
                 <div>
                   <div style="font-weight:600">{{ b.name }}</div>
                   <div style="color:#666; font-size:12px">{{ b.author ?? '' }}</div>
-                  <div style="color:#666; font-size:12px">出版: {{ b.publicationTime ?? '-' }}</div>
+                  <div style="color:#666; font-size:12px">出版: {{ formatDate(b.publicationTime) }}</div>
                 </div>
                 <div>
                   <el-button type="primary" size="mini" @click="borrowBook(b.id)">借阅</el-button>
@@ -136,6 +136,12 @@ async function addBook() {
     console.error('添加图书失败', err)
     alert('添加图书失败')
   }
+}
+
+function formatDate(v) {
+  if (!v) return '-'
+  if (typeof v === 'string') return v.split('T')[0]
+  return v
 }
 
 </script>

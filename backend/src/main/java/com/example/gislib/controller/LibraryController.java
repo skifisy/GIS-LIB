@@ -66,6 +66,16 @@ import java.util.stream.Collectors;
     return ResponseEntity.ok(d);
   }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+      try {
+        libraryRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+      } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+        return ResponseEntity.notFound().build();
+      }
+    }
+
  public
   static class CreateLibraryReq {
    private

@@ -3,6 +3,7 @@ package com.example.gislib.controller;
 import com.example.gislib.entity.RentRecord;
 import com.example.gislib.repository.RentRecordRepository;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,5 +25,15 @@ import java.util.stream.Collectors;
         .stream()
         .filter(r->studentId.equals(r.getStudentId()))
         .collect(Collectors.toList());
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> delete(@PathVariable Long id) {
+    try {
+      rentRecordRepository.deleteById(id);
+      return ResponseEntity.noContent().build();
+    } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+      return ResponseEntity.notFound().build();
+    }
   }
 }

@@ -18,6 +18,11 @@ export async function createLibrary(lib) {
   return res.data
 }
 
+export async function deleteLibrary(id) {
+  const res = await api.delete(`/libraries/${id}`)
+  return res.data
+}
+
 export async function listBooks(libraryId) {
   const res = await api.get('/books', { params: { libraryId } })
   return res.data
@@ -31,6 +36,11 @@ export async function listAllBooks() {
 
 export async function createBook(book) {
   const res = await api.post('/books', book)
+  return res.data
+}
+
+export async function deleteBook(id) {
+  const res = await api.delete(`/books/${id}`)
   return res.data
 }
 
@@ -52,6 +62,11 @@ export async function borrow(bookId, studentId) {
 
 export async function returnBook(rentId, studentId) {
   const res = await api.post('/return', { rentId, studentId })
+  return res.data
+}
+
+export async function deleteRent(id) {
+  const res = await api.delete(`/rents/${id}`)
   return res.data
 }
 

@@ -3,8 +3,8 @@
     <!-- 上半部分：筛选区（使用 Element Plus 组件） -->
     <div style="height:36%; padding:12px; background:#fafafa; box-shadow:0 1px 4px rgba(0,0,0,0.04);">
       <div style="display:flex; align-items:flex-start; gap:12px">
-        <h3 style="margin:0">GIS 图书馆共享系统（原型）</h3>
-        <div style="margin-left:12px">学生 ID（模拟登录）: <el-input v-model="studentId" style="width:140px" size="small" /></div>
+        <h3 style="margin:0">GIS 图书馆共享系统</h3>
+        <div style="margin-left:12px">学生 ID: <el-input v-model="studentId" style="width:140px" size="small" /></div>
         <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
           <el-button @click="showRents = true" size="small">我的借阅</el-button>
           <el-button @click="goAdmin" size="small">管理员视图</el-button>
