@@ -15,24 +15,19 @@
         </el-menu>
       </el-aside>
 
-        <!-- 中央区域：仅在非列表视图时显示（当前需求：所有列表视图不展示中央地图） -->
-        <div style="flex:1; min-width:420px; height:calc(100vh - 80px); display:none"></div>
+        <!-- 中央区域或右侧添加视图二选一展示 -->
+        <div v-if="currentView !== 'add'" style="flex:1; min-width:420px; height:calc(100vh - 80px);">
+          <component :is="currentComponent" ref="centerRef" style="height:100%; width:100%" />
+        </div>
 
-        <div style="width:420px; max-width:40%; padding:12px; box-sizing:border-box; overflow:auto; display:flex; flex-direction:column; gap:8px;">
+        <div v-if="currentView === 'add'" style="width:600px; max-width:60%; padding:12px; box-sizing:border-box; overflow:auto; display:flex; flex-direction:column; gap:8px;">
           <!-- 如果是添加视图：右侧上半部为表单，下半部为地图 -->
-          <template v-if="currentView === 'add'">
-            <div style="flex:0 0 auto">
-              <AddLibraryInline :initialPoint="selectedPoint" @region-change="onRegionChange" @created="onCreated" />
-            </div>
-            <div style="flex:1; min-height:260px; border:1px solid #eee; border-radius:6px; overflow:hidden">
-              <MapView ref="mapRef" :admin="true" style="height:100%" @admin-point="onAdminPoint" @select-library="onSelectLibrary" />
-            </div>
-          </template>
-
-          <!-- 否则渲染对应的列表组件（无地图） -->
-          <template v-else>
-            <component :is="currentComponent" ref="rightRef" />
-          </template>
+          <div style="flex:0 0 auto">
+            <AddLibraryInline :initialPoint="selectedPoint" @region-change="onRegionChange" @created="onCreated" />
+          </div>
+          <div style="flex:1; min-height:260px; border:1px solid #eee; border-radius:6px; overflow:hidden">
+            <MapView ref="mapRef" :admin="true" style="height:100%" @admin-point="onAdminPoint" @select-library="onSelectLibrary" />
+          </div>
         </div>
     </div>
   </div>
@@ -52,7 +47,7 @@ export default {
   setup() {
     const router = useRouter()
     const mapRef = ref(null)
-    const rightRef = ref(null)
+    const centerRef = ref(null)
     const showAdd = ref(false)
     const selectedPoint = ref(null)
     const currentView = ref('libraries')
@@ -70,7 +65,11 @@ export default {
     function onMenuSelect(key) {
       currentView.value = key
       // give child a moment to mount then call load if available
-      setTimeout(() => { if (rightRef.value && rightRef.value.load) rightRef.value.load() }, 80)
+      setTimeout(() => {
+        if (currentView.value !== 'add') {
+          if (centerRef.value && centerRef.value.load) centerRef.value.load()
+        }
+      }, 80)
     }
 
     function onAdminPoint(p) {
@@ -84,14 +83,15 @@ export default {
 
     function onCreated(lib) {
       if (mapRef.value && mapRef.value.addMarker) mapRef.value.addMarker(lib)
-      if (rightRef.value && rightRef.value.load) rightRef.value.load()
+  // refresh center list if present
+  if (centerRef.value && centerRef.value.load) centerRef.value.load()
     }
 
     function onSelectLibrary(lib) { /* could open details */ }
 
-    onMounted(() => { setTimeout(() => { if (rightRef.value && rightRef.value.load) rightRef.value.load() }, 120) })
+    onMounted(() => { setTimeout(() => { if (centerRef.value && centerRef.value.load) centerRef.value.load() }, 120) })
 
-    return { goBack, mapRef, rightRef, showAdd, selectedPoint, onAdminPoint, onRegionChange, onCreated, onSelectLibrary, currentView, currentComponent, onMenuSelect }
+    return { goBack, mapRef, centerRef, showAdd, selectedPoint, onAdminPoint, onRegionChange, onCreated, onSelectLibrary, currentView, currentComponent, onMenuSelect }
   }
 }
 </script>

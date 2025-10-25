@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="82" viewBox="0 0 50 82">
+  <defs>
+    <filter id="f2" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feOffset dx="0" dy="3" in="b" result="o"/>
+      <feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#f2)">
+    <path d="M25 0C12.2 0 2 10.2 2 22.9c0 16.2 21.2 42.8 21.9 43.6.6-.8 22.1-27.4 22.1-43.6C46 10.2 35.8 0 25 0z" fill="#d00" />
+    <circle cx="25" cy="22.9" r="8.4" fill="#fff" />
+  </g>
+</svg>

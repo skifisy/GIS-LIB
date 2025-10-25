@@ -73,6 +73,17 @@ function disableAdminAdd() {
 }
 
 onMounted(() => {
+  // Ensure Leaflet uses our frontend static assets for marker icons.
+  // Place the marker images (marker-icon.png, marker-icon-2x.png, marker-shadow.png)
+  // into `frontend/public/` so they are served at the app root (e.g. /marker-icon.png).
+  try {
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: '/marker-icon-2x.svg',
+      iconUrl: '/marker-icon.svg',
+      shadowUrl: '/marker-shadow.svg'
+    })
+  } catch (e) { /* ignore if mergeOptions not available */ }
+
   const center = [30.67, 104.07]
   const map = L.map(mapContainer.value).setView(center, 12)
   mapRef.value = map

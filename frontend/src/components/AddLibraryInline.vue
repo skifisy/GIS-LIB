@@ -1,7 +1,7 @@
 <template>
   <div style="display:flex; flex-direction:column; gap:8px;">
     <div style="padding:8px; border:1px solid #eee; border-radius:6px; background:#fff">
-      <h4 style="margin:0 0 8px 0">添加新图书馆（页面内录入）</h4>
+      <h4 style="margin:0 0 8px 0">添加新图书馆</h4>
       <div style="display:flex; gap:8px; margin-bottom:8px">
         <el-select v-model="provinceIndex" placeholder="选择省" style="flex:1" @change="onProvinceChange">
           <el-option v-for="(p, idx) in regionsData" :key="p.code" :label="p.name" :value="idx" />

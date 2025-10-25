@@ -2,51 +2,7 @@
   <div :class="['admin-panel', { collapsed }]">
     <button class="collapse-toggle" @click="collapsed = !collapsed">{{ collapsed ? '展开' : '收起' }}</button>
 
-    <template v-if="!collapsed">
-      <h4>管理员视图 — 数据总览</h4>
-      <div style="display:flex; gap:12px; align-items:flex-start">
-        <div class="card">
-          <div class="card-header">图书馆 ({{ libraries.length }})</div>
-          <div class="card-body">
-            <button @click="loadLibraries">刷新</button>
-            <ul class="mini-list">
-              <li v-for="l in libraries" :key="l.id">#{{ l.id }} {{ l.name }} — {{ l.college }} (藏书: {{ l.numberOfBooks ?? '-' }})<br/><small>坐标: {{ l.lon ?? '-' }}, {{ l.lat ?? '-' }}</small></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">图书 ({{ books.length }})</div>
-          <div class="card-body">
-            <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px">
-              <label style="font-size:12px">按图书馆筛选：</label>
-              <select v-model="filterLibraryId">
-                <option :value="null">全部</option>
-                <option v-for="l in libraries" :key="l.id" :value="l.id">{{ l.name }}</option>
-              </select>
-              <button @click="loadBooks">刷新</button>
-            </div>
-            <ul class="mini-list">
-              <li v-for="b in books" :key="b.id">#{{ b.id }} <strong>{{ b.name }}</strong> — {{ b.author ?? '-' }} (馆: {{ b.libraryId }})</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">借阅记录 ({{ rents.length }})</div>
-          <div class="card-body">
-            <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px">
-              <input v-model="filterStudentId" placeholder="按学生ID筛选" style="width:120px" />
-              <button @click="loadRents">刷新</button>
-            </div>
-            <ul class="mini-list">
-              <li v-for="r in rents" :key="r.id">#{{ r.id }} 书:{{ r.bookId }} 馆:{{ r.libraryId }} 学生:{{ r.studentId }} 返回:{{ r.returnTime ?? '-' }}</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div style="margin-top:8px; text-align:right"><button @click="$emit('close')">关闭管理员视图</button></div>
-    </template>
+    <!-- 管理数据总览已移除：此处保留最小占位，若需恢复可将展示逻辑放回此处 -->
   </div>
 </template>
 
